@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import './loader.scss';
 const messages = ['пинаем сервер...', 'ищем пользователей...', 'ждем данные...'];
 
 const Loader = () => {
@@ -14,7 +15,7 @@ const Loader = () => {
         return () => clearInterval(intervalId);
     }, []);
 
-    return <div>{messages[currentMessage]}</div>;
+    return <div className='loader'>{messages[currentMessage]}</div>;
 };
 
 export default Loader;

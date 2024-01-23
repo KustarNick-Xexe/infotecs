@@ -3,6 +3,13 @@ import "./search.scss";
 
 const SearchComponent = ({ onSearch, ...props }) => {
   const [search, setSearch] = useState('');
+  
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      onSearch(search);
+    }
+  };
+
   return (
     <div className="search-container" {...props}>
       <input
@@ -10,6 +17,7 @@ const SearchComponent = ({ onSearch, ...props }) => {
         placeholder="Введите некий текст"
         value={search}
         onChange={(e) => setSearch(e.target.value) }
+        onKeyPress={handleKeyPress}
         className="search-input"
       />
       <button onClick={() => onSearch(search)} className="search-button">

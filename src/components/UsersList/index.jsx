@@ -18,6 +18,8 @@ const UsersList = ({ users }) => {
     address: [user.address.address, user.address.city].join(", "),
   }));
 
+  console.log(users.length);
+
   return (
     <div className="users-container">
       <Table options={options} rowData={rowData} />

@@ -9,53 +9,50 @@ function App() {
   const [info, setInfo] = useState({ data: [], error: null, isLoading: false });
   const [searchTerm, setSearchTerm] = useState('');
 
-  const getUsers = useCallback(async () => {
-    setInfo((prev) => ({ ...prev, isLoading: true }));
+  const updateInfo = (updates) => {
+    setInfo((prev) => ({ ...prev, ...updates }));
+  };
+
+  const fetchUsers = async (fetchFunction, args) => {
+    updateInfo({ isLoading: true });
     try {
-      const data = await getAllUsers();
-      setInfo({ data: data.users, isLoading: false });
+      const data = await fetchFunction(args);
+      updateInfo({ data: data.users, isLoading: false });
     } catch (error) {
-      setInfo({ error: error, isLoading: false });
-    }
-  }, []);
-
-  useEffect(() => {
-    getUsers();
-    const interval = setInterval(getUsers, 160 * 1000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [getUsers]);
-
-  const handleSearch = async () => {
-    try {
-      const users = await searchUsers(searchTerm);
-    } catch (error) {
-      console.error(`Ошибка при поиске: ${searchTerm}:`, error);
+      console.error(`Ошибка:`, error);
+      updateInfo({ error: error, isLoading: false });
     }
   };
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (searchTerm) {
-        handleSearch();
-      }
-    }, 500);
-
-    return () => clearTimeout(timer);
+  const getUsers = useCallback(() => {
+    if (searchTerm) {
+      return;
+    }
+    fetchUsers(getAllUsers);
   }, [searchTerm]);
 
-  if (info.isLoading) {
-    return <Loader />;
-  }
+  const handleSearch = useCallback(() => {
+    if (!searchTerm) {
+      getUsers();
+      return;
+    }
+    fetchUsers(searchUsers, searchTerm);
+  }, [searchTerm, getUsers]);
+
+  useEffect(() => {
+    getUsers();
+    const interval = setInterval(getUsers, 30 * 1000);
+    return () => clearInterval(interval);
+  }, [getUsers]);
+
+  useEffect(() => {
+    handleSearch();
+  }, [handleSearch]);
 
   return (
-    <div>
-      <div>
-        <Search onSearch={(value) => setSearchTerm(value)}/>
-      </div>
-      <UsersList users={info.data} />
+    <div className="app-container">
+      <Search onSearch={(value) => setSearchTerm(value)} />
+      {info.isLoading ? <Loader /> : <UsersList users={info.data} />}
     </div>
   );
 }
