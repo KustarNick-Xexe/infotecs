@@ -16,10 +16,10 @@
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-size: 16px;
   letter-spacing: 0.0075em;
-  border: 1px solid #1c1b1a;
-  background-color: #ffffff;
-  color: #1c1b1a;
-  box-shadow: #1c1b1a 3px 3px;
+  border: 1px solid var(--main-black);
+  background-color: var(--main-white);
+  color: var(--main-black);
+  box-shadow: var(--main-black) 3px 3px;
 
   &:focus-visible {
     outline: none;
@@ -32,21 +32,21 @@
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-size: 16px;
   letter-spacing: 0.0075em;
-  border: 1px solid #1c1b1a;
+  border: 1px solid var(--main-black);
   border-left: none;
   border-radius: 0;
-  box-shadow: #1c1b1a 3px 3px;
+  box-shadow: var(--main-black) 3px 3px;
   cursor: pointer;
-  background-color: #ffffff;
-  color: #1c1b1a;
+  background-color: var(--main-white);
+  color: var(--main-black);
 
   &:hover {
     border-color: #1c1b1a;
-    background-color: #f5f5f5;
+    background-color: var(--light-gray)
   }
 
   &:active {
-    background-color: #e8e8e8;
+    background-color: var(--dark-gray);
   }
 
   &:focus {
