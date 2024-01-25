@@ -10,17 +10,20 @@
   thead {
     th {
       padding: 16px;
-      text-align: left;
+      text-align: center;
       font-weight: 500;
       letter-spacing: 0.0075em;
       border-bottom: 1px solid var(--main-black);
-    }
+      min-width: 50px;
+      resize: horizontal;
+      overflow: hidden;
+    }    
   }
 
   tbody {
     td {
       padding: 16px;
-      text-align: left;
+      text-align: center;
       vertical-align: top;
       border-bottom: 1px solid var(--main-black);
     }

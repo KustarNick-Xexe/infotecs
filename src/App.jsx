@@ -9,6 +9,7 @@ function App() {
   const [info, setInfo] = useState({ data: [], error: null, isLoading: false });
   const [searchTerm, setSearchTerm] = useState('');
 
+  // загрузка данных 
   const updateInfo = (updates) => {
     setInfo((prev) => ({ ...prev, ...updates }));
   };
@@ -24,6 +25,7 @@ function App() {
     }
   };
 
+  // если веден поиск, активна сортировка, открыто окно запросы не идут
   const getUsers = useCallback(() => {
     if (searchTerm) {
       return;
@@ -39,6 +41,7 @@ function App() {
     fetchUsers(searchUsers, searchTerm);
   }, [searchTerm, getUsers]);
 
+  // загружаем свежие данные
   useEffect(() => {
     getUsers();
     const interval = setInterval(getUsers, 30 * 1000);
