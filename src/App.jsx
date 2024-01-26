@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { getAllUsers, searchUsers } from "./services/users";
+import { clear } from "./services/localStorage";
 import UsersList from "./components/UsersList";
 import Search from "./components/ui/Search";
 import Loader from "./components/ui/Loader";
@@ -8,11 +9,16 @@ import "./App.css";
 function App() {
   const [info, setInfo] = useState({ data: [], error: null, isLoading: false });
   const [searchTerm, setSearchTerm] = useState('');
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  // загрузка данных 
   const updateInfo = (updates) => {
+    if(modalIsOpen) return;
     setInfo((prev) => ({ ...prev, ...updates }));
   };
+
+  const handleOpenModal = () => {
+    setModalIsOpen(!modalIsOpen);
+  }
 
   const fetchUsers = async (fetchFunction, args) => {
     updateInfo({ isLoading: true });
@@ -25,23 +31,21 @@ function App() {
     }
   };
 
-  // если веден поиск, активна сортировка, открыто окно запросы не идут
   const getUsers = useCallback(() => {
-    if (searchTerm) {
+    if (searchTerm || modalIsOpen) {
       return;
     }
     fetchUsers(getAllUsers);
-  }, [searchTerm]);
+  }, [searchTerm, modalIsOpen]);
 
   const handleSearch = useCallback(() => {
-    if (!searchTerm) {
+    if (!searchTerm || modalIsOpen) {
       getUsers();
       return;
     }
     fetchUsers(searchUsers, searchTerm);
-  }, [searchTerm, getUsers]);
+  }, [searchTerm, getUsers, modalIsOpen]);
 
-  // загружаем свежие данные
   useEffect(() => {
     getUsers();
     const interval = setInterval(getUsers, 30 * 1000);
@@ -52,10 +56,16 @@ function App() {
     handleSearch();
   }, [handleSearch]);
 
+  useEffect(() => {
+    return () => {
+      clear();
+    };
+  }, []);
+
   return (
     <div className="app-container">
       <Search onSearch={(value) => setSearchTerm(value)} />
-      {info.isLoading ? <Loader /> : <UsersList users={info.data} />}
+      {info.isLoading ? <Loader /> : <UsersList users={info.data} onOpenModal={handleOpenModal}/>}
     </div>
   );
 }

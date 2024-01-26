@@ -3,7 +3,7 @@ import { useState } from "react";
 import Modal from "../ui/Modal";
 import './userlist.scss';
 
-const UsersList = ({ users }) => {
+const UsersList = ({ users, onOpenModal }) => {
   const [openModalId, setOpenModalId] = useState(null);
 
   // создаем конфиг таблицы
@@ -17,10 +17,12 @@ const UsersList = ({ users }) => {
 
   const handleRowClick = (userId) => {
     setOpenModalId(userId);
+    onOpenModal(true);
   };
 
   const closeModal = () => {
     setOpenModalId(null);
+    onOpenModal(false);
   };
 
   // обработка данных под таблицу
